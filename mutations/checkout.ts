@@ -1,9 +1,9 @@
 import { KeystoneContext } from '@keystone-next/types';
 import {
-import stripeConfig from '../lib/stripe';
   CartItemCreateInput,
   OrderCreateInput,
 } from '../.keystone/schema-types';
+import stripeConfig from '../lib/stripe';
 
 const graphql = String.raw;
 
@@ -59,15 +59,17 @@ async function checkout(
 
   console.log(amount);
   // 3. Create the charge with the stripe library
-  const charge = await stripeConfig.paymentIntents.create({
+  const charge = await stripeConfig.paymentIntents
+    .create({
       amount,
       currency: 'USD',
       confirm: true,
       payment_method: token,
-  }).catch(err => {
-      console.log(err)
-      throw new Error(err.message)
-  })
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error(err.message);
+    });
 
   // 4. Convert the cartItems to OrderItems
   // 5. Create the order and return it
