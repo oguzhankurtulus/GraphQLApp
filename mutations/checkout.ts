@@ -57,7 +57,6 @@ async function checkout(
   },
   0);
 
-  console.log(amount);
   // 3. Create the charge with the stripe library
   const charge = await stripeConfig.paymentIntents
     .create({
@@ -77,7 +76,7 @@ async function checkout(
       name: cartItem.product.name,
       description: cartItem.product.description,
       price: cartItem.product.price,
-      quantity: cartItem.product.quantity,
+      quantity: cartItem.quantity,
       photo: { connect: { id: cartItem.product.photo.id } },
     };
 
