@@ -1,9 +1,14 @@
 import { list } from '@keystone-next/keystone/schema';
 import { integer, relationship, select, text } from '@keystone-next/fields';
+import { isSignedIn, rules } from '../access';
 
 export const Product = list({
-  // TODO
-  // access:
+  access: {
+    create: isSignedIn,
+    read: rules.canReadProducts,
+    update: rules.canManageProducts,
+    delete: rules.canManageProducts,
+  },
   fields: {
     name: text({ isRequired: true }),
     description: text({
@@ -32,6 +37,12 @@ export const Product = list({
         inlineCreate: { fields: ['image', 'altText'] },
         inlineEdit: { fields: ['image', 'altText'] },
       },
+    }),
+    user: relationship({
+      ref: 'User.products',
+      defaultValue: ({ context }) => ({
+        connect: { id: context.session.itemId },
+      }),
     }),
   },
 });
